@@ -1,35 +1,50 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
  
-# アクセストークン（先ほど発行されたアクセストークンに書き換えてください）
+# アクセストークン（BotFatherから発行されたアクセストークンに書き換えてください）
 TOKEN = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
  
  
 class TelegramBot:
     def __init__(self, system):
         self.system = system
- 
-    def start(self, bot, update):
+
+        # ロガーの設定
+        logging.basicConfig(
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            level=logging.INFO
+        )
+        self.logger = logging.getLogger(__name__)
+
+        self.app = ApplicationBuilder().token(TOKEN).build()
+        self._register_handlers()
+
+    def _register_handlers(self):
+        self.app.add_handler(CommandHandler("start", self.start))
+        self.app.add_handler(
+            MessageHandler(filters.TEXT & ~filters.COMMAND, self.message)
+        )
+
+    async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         # 辞書型 inputにユーザIDを設定
-        input = {'utt': None, 'sessionId': str(update.message.from_user.id)}
- 
+        user_id = str(update.effective_user.id)
+        input_dict = {'utt': None, 'sessionId': user_id}
+
         # システムからの最初の発話をinitial_messageから取得し，送信
-        update.message.reply_text(self.system.initial_message(input)["utt"])
- 
-    def message(self, bot, update):
+        response = self.system.initial_message(input_dict)
+        await update.message.reply_text(response.get("utt", ""))
+
+    async def message(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         # 辞書型 inputにユーザからの発話とユーザIDを設定
-        input = {'utt': update.message.text, 'sessionId': str(update.message.from_user.id)}
- 
+        user_id = str(update.effective_user.id)
+        input_dict = {'utt': update.message.text, 'sessionId': user_id}
+
         # replyメソッドによりinputから発話を生成
-        system_output = self.system.reply(input)
- 
-        # 発話を送信
-        update.message.reply_text(system_output["utt"])
- 
-    def run(self):
-        updater = Updater(TOKEN)
-        dp = updater.dispatcher
-        dp.add_handler(CommandHandler("start", self.start))
-        dp.add_handler(MessageHandler(Filters.text, self.message))
-        updater.start_polling()
-        updater.idle()
+        system_output = self.system.reply(input_dict)
+        await update.message.reply_text(system_output.get("utt", ""))
+
+    def run(self) -> None:
+        self.logger.info("Bot is starting...")
+        self.app.run_polling()
+
+
         
