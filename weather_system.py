@@ -3,7 +3,6 @@ from PySide2 import QtCore, QtScxml
 import requests
 import json
 from datetime import datetime, timedelta, time
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from telegram_bot import TelegramBot
 
 class WeatherSystem:
