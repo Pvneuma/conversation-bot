@@ -1,4 +1,12 @@
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+import logging
+from telegram import Update
+from telegram.ext import (
+    ApplicationBuilder,
+    ContextTypes,
+    CommandHandler,
+    MessageHandler,
+    filters,
+)
  
 # アクセストークン（BotFatherから発行されたアクセストークンに書き換えてください）
 TOKEN = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
