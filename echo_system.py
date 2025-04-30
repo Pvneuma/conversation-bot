@@ -1,4 +1,3 @@
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from telegram_bot import TelegramBot
  
 # ユーザの入力をそのまま返す対話システム．
