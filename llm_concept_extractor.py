@@ -17,7 +17,7 @@ def get_weather_info_from_utterance(utterance: str) -> dict:
         return DEFAULT_WEATHER_INFO.copy()
 
     prompt = f"""
-以下の日本のユーザー発話から、天気予報に関する情報を抽出してください。
+以下のユーザ発話から、天気予報に関する情報を抽出してください。
 抽出する情報は、場所（都道府県名）、日付（「今日」または「明日」）、種類（「天気」または「気温」）です。
 結果は、キー "place"、"date"、"type" を持つJSONオブジェクトとして返してください。
 もし情報が見つからない場合は、対応する値として空文字列 "" を使用してください。
@@ -27,7 +27,7 @@ def get_weather_info_from_utterance(utterance: str) -> dict:
 - "date" は 「今日」または「明日」のいずれかのみを認識します。それ以外、または言及がない場合は空文字列にしてください。
 - "type" は「天気」または「気温」のいずれかのみを認識します。それ以外、または言及がない場合は空文字列にしてください。
 
-ユーザー発話: 「{utterance}」
+ユーザ発話: 「{utterance}」
 
 抽出結果 (JSON形式):
 """
