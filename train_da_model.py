@@ -3,9 +3,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
 from sklearn.preprocessing import LabelEncoder
 import dill 
+import ipadic
 
 # MeCabの初期化
-mecab = MeCab.Tagger()
+mecab = MeCab.Tagger(ipadic.MECAB_ARGS)
 mecab.parse('')
 
 sents = []
